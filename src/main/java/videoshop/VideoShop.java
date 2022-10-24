@@ -16,13 +16,13 @@
 package videoshop;
 
 import org.salespointframework.EnableSalespoint;
-import org.salespointframework.SalespointSecurityConfiguration;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 
 /**
  * The central application class to configure the Spring container and run the application.
@@ -44,7 +44,7 @@ public class VideoShop {
 		/**
 		 * We configure {@code /login} to be directly routed to the {@code login} template without any controller
 		 * interaction.
-		 * 
+		 *
 		 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurer#addViewControllers(org.springframework.web.servlet.config.annotation.ViewControllerRegistry)
 		 */
 		@Override
@@ -55,22 +55,24 @@ public class VideoShop {
 	}
 
 	@Configuration
-	static class WebSecurityConfiguration extends SalespointSecurityConfiguration {
+	static class WebSecurityConfiguration {
 
 		/**
 		 * Disabling Spring Security's CSRF support as we do not implement pre-flight request handling for the sake of
 		 * simplicity. Setting up basic security and defining login and logout options.
-		 * 
+		 *
 		 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.HttpSecurity)
 		 */
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
 
-			http.csrf().disable();
+		@Bean
+		SecurityFilterChain videoShopSecurity(HttpSecurity http) throws Exception {
 
-			http.authorizeRequests().antMatchers("/**").permitAll().and().//
-					formLogin().loginPage(LOGIN_ROUTE).loginProcessingUrl(LOGIN_ROUTE).and(). //
-					logout().logoutUrl("/logout").logoutSuccessUrl("/");
+			return http
+					.csrf().disable()
+					.authorizeHttpRequests().requestMatchers("/**").permitAll() //
+					.and().formLogin().loginPage(LOGIN_ROUTE).loginProcessingUrl(LOGIN_ROUTE) //
+					.and().logout().logoutUrl("/logout").logoutSuccessUrl("/")
+					.and().build();
 		}
 	}
 }
