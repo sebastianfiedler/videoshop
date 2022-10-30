@@ -19,6 +19,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
 import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This is a so called form-backing class to prepare the form display (in
@@ -49,13 +55,15 @@ import org.springframework.validation.Errors;
  */
 class RegistrationForm {
 
-	private final @NotEmpty String name, password, address;
+	private final @NotEmpty String name, password, address, passwordcheck;
 
-	public RegistrationForm(String name, String password, String address) {
+	public RegistrationForm(String name, String password, String address, String passwordcheck) {
 
 		this.name = name;
 		this.password = password;
 		this.address = address;
+
+        this.passwordcheck = passwordcheck;
 	}
 
 	public String getName() {
@@ -70,7 +78,26 @@ class RegistrationForm {
 		return address;
 	}
 
-	public void validate(Errors errors) {
+	public void validate(Errors errors, CustomerManagement customerManagement) {
 		// Complex validation goes here
+        if(!this.password.equals(this.passwordcheck)){
+            // System.out.println("Error entdeckt");
+            errors.rejectValue("passwordcheck", "NotSame.registrationForm.passwordcheck", "The passwords didn't match");
+        }
+        // customerManagement.findAll().stream().forEach(s->System.out.println(s.getUserAccount().getUsername()));
+        // customerManagement.findAll().stream().forEach(s->System.out.println(s.getUserAccount().getUsername().equals(this.name)));
+        customerManagement.findAll().stream().forEach(s -> {
+            if (s.getUserAccount().getUsername().equals(this.name)) {
+                // System.out.println("Den Nutzernamen gibt es schon");
+                errors.rejectValue("name", "AlreadyTaken.registrationForm.name", "That name is not availible anymore.");
+            }
+        });
+        if(!this.password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$")){
+            errors.rejectValue("password", "NotRightFormat.registrationForm.password", "The password must contain at least 8 symbols, one capital letter, one number. No special characters.");
+        };
 	}
+
+    public String getPasswordcheck() {
+        return passwordcheck;
+    }
 }

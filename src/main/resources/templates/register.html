@@ -30,6 +30,15 @@
                     <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Das Passwort darf
                         nicht leer sein.</p>
                 </div>
+
+
+                 <div class="field">
+                    <label th:text="#{register.passwordcheck}" for="passwordcheck">Confirm Password</label>
+                    <input id="passwordcheck" name="passwordcheck" th:field="*{passwordcheck}" th:errorclass="fieldError" type="password" required="required"/><br/>
+                     <p th:if="${#fields.hasErrors('passwordcheck')}" th:errors="*{passwordcheck}" th:text="#{NotSame.registrationForm.passwordcheck}">Die Eingaben stimmen nicht überein.</p>
+                </div>
+
+
                 <div class="field">
                     <label th:text="#{register.address}" for="address">Straße</label>
                     <input id="address" name="address" th:field="*{address}" th:errorclass="fieldError" type="text"

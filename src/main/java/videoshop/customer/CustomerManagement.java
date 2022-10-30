@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.Objects;
+
 /**
  * Implementation of business logic related to {@link Customer}s.
  *
@@ -63,7 +65,7 @@ public class CustomerManagement {
 
 		Assert.notNull(form, "Registration form must not be null!");
 
-		var password = UnencryptedPassword.of(form.getPassword());
+        var password = UnencryptedPassword.of(form.getPassword());
 		var userAccount = userAccounts.create(form.getName(), password, CUSTOMER_ROLE);
 
 		return customers.save(new Customer(userAccount, form.getAddress()));

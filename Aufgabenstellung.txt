@@ -1,0 +1,9 @@
+Aufgabe 7: Registrierung
+• Ein neuer Benutzer wird angelegt. Dabei werden Benutzername und
+Passwort eingeben. Das Passwort muss dabei zwei Mal eingegeben werden
+(Überprüfung ob es gleich ist) und darf nicht im Klartext auf dem Browser
+sein (type=password). Die Validierung der Eingaben, wird vom Server
+erledigt.
+• Schwierigkeit: Mittel
+• Optional: Passwort mit Mindestlänge und mindestens einem Großbuchstaben und einer Zahl und der Überprüfen, ob der Name nicht schon
+vorhanden war.

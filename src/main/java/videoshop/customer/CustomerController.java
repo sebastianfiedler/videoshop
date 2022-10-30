@@ -38,13 +38,15 @@ class CustomerController {
 	}
 
 	// (｡◕‿◕｡)
-	// Über @Valid können wir die Eingaben automagisch prüfen lassen, ob es Fehler gab steht im BindingResult,
+	// Über @Valid können wir die Eingaben automagisch prüfen lassen, ob es Fehler gab, steht im BindingResult,
 	// dies muss direkt nach dem @Valid Parameter folgen.
 	// Siehe außerdem videoshop.model.validation.RegistrationForm
 	// Lektüre: http://docs.spring.io/spring/docs/current/spring-framework-reference/html/validation.html
-	@PostMapping("/register")
+    @PostMapping("/register")
 	String registerNew(@Valid RegistrationForm form, Errors result) {
-
+        form.validate(result, this.customerManagement);
+        // System.out.println(result.hasFieldErrors("passwordcheck"));
+        // System.out.println(result.hasErrors());
 		if (result.hasErrors()) {
 			return "register";
 		}
